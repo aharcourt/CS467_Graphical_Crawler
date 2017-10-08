@@ -1,0 +1,5 @@
+#!/bin/bash
+echo "Stopping existing crawlers; ignore errors here..."
+./node_modules/forever/bin/forever stop crawler
+echo -e "\nStarting a crawler server. Worry about errors again."
+./node_modules/forever/bin/forever start ./foreverConf.json
