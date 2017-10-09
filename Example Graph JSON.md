@@ -37,51 +37,36 @@ Here is a sample of some JSON which produces a simple graph.
     {
       "group": "nodes",
       "data" : {
-         "id": "n1"
-       },
-       "position": {
-         "x": 0,
-         "y": 0
+         "id": "n1",
+         "url": "http://www.somewhere.com/n1"
        }
     },
     {
       "group": "nodes",
       "data" : {
-         "id": "n3"
-       },
-       "position": {
-         "x": 100,
-         "y": 0
+         "id": "n2",
+         "url": "http://www.somewhere.com/n2"
        }
     },
     {
       "group": "nodes",
       "data" : {
-         "id": "n4"
-       },
-       "position": {
-         "x": 0,
-         "y": 100
+         "id": "n3",
+         "url": "http://www.somewhere.com/n3"
        }
     },
     {
       "group": "nodes",
       "data" : {
-         "id": "n5"
-       },
-       "position": {
-         "x": 100,
-         "y": 100
+         "id": "n4",
+         "url": "http://www.somewhere.com/n4"
        }
     },
     {
       "group": "nodes",
       "data" : {
-         "id": "n2"
-       },
-       "position": {
-         "x": 50,
-         "y": 50
+         "id": "n5",
+         "url": "http://www.somewhere.com/n5"
        }
     },
 
@@ -123,7 +108,7 @@ Here is a sample of some JSON which produces a simple graph.
       "data": {
         "id": "e5",
         "source": "n3",
-        "target": "n5"
+        "target": "n3"
       }
     },
     {
