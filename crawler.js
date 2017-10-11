@@ -1,19 +1,10 @@
 var express = require('express');
 var request = require('request');
 var bodyParser = require('body-parser');
-var mysql = require('mysql');
+var mysql = require('./dbcon');
 
 // Create server object
 var app = express();
-
-// MySQL variable
-/*var pool = mysql.createPool({
-	connectionLimit: 10,
-	host: 'mysql.eecs.oregonstate.edu',
-	user: '',
-	password: '',
-	database: ''
-});*/
 
 // Set port 
 app.set('port', 5545);
