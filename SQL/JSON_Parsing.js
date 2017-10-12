@@ -24,12 +24,12 @@ if(req.body['all'])
 			return;
 		}
 		res.type('text/plain');	
-		res.send(QueryResultsToJson(JSON.stringify(rows)));
+		res.send(crawlResultsToJson(JSON.stringify(rows)));
 	});
 }
 	
 	
-function CrawlResultsToJson(raw) 
+function crawlResultsToJson(raw) 
 {
 	// Define the return string 
 	var retStr = '{"MetaData": {"CookieId":';
