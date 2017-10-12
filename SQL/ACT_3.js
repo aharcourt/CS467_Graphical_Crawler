@@ -17,21 +17,21 @@ app.set('port', 3000);
 
 // Create connection pool to local instance and student database in that instance
 // Only do once at the top 
-// var pool = mysql.createPool(
-// {
-	// host  : 'localhost',
-	// user  : 'root',
-	// password: 'CowBoy12##',
-	// database: 'webcrawler'
-// });
-
 var pool = mysql.createPool(
 {
-	host  : 'mysql.eecs.oregonstate.edu',
-	user  : 'cs290_harcoura',
-	password: '0996',
-	database: 'cs290_harcoura'
+	host  : 'localhost',
+	user  : 'root',
+	password: 'CowBoy12##',
+	database: 'webcrawler'
 });
+
+// var pool = mysql.createPool(
+// {
+	// host  : 'mysql.eecs.oregonstate.edu',
+	// user  : 'cs290_harcoura',
+	// password: '0996',
+	// database: 'cs290_harcoura'
+// });
 
 
 // When called from the query string in the browser initially
@@ -41,51 +41,6 @@ app.get('/',function(req,res,next)
 	res.render("home", context);
 });
 
-// Check if a cookie is present. Return Count(Id) for present 
-// 0 for not present and -1 for error
-function isCookiePresent(sqlPool, cookie)
-{
-	// Query string define 
-	queryString = 'SELECT COUNT(Id) AS Count FROM wc_UserSearches ' 
-	queryString += 'WHERE CookieId = ?';
-
-	// Run the query 
-	sqlPool.query(queryString,[cookie], function(err, rows, fields)
-	{		
-		if(err)
-		{
-			console.log(err.message);
-			return -1;
-		}
-		
-		// Check the results for the count value 		
-		console.log("isCookiePresent Count(Id) " + String(rows[0].Count));
-		return rows[0].Count;
-	});
-}
-
-// Helper function to wrap up the javascipt into the json string 
-// Example of what the results should look like below.
-// {
-	// "MetaData": {
-		// "CookieId": 4,
-		// "User": "Ian",
-		// "SearchType": "BFS",
-		// "SearchDepth": 3,
-		// "RootUrl": "google.com"
-	// },
-	// "Edges": [{
-		// "SourceUrl": "google.com",
-		// "SourceId": 1,
-		// "DestinationUrl": "yahoo.com"
-		// "DestinationId": 2
-	// }, {
-		// "SourceUrl": "google.com",
-		// "SourceId": 1,
-		// "DestinationUrl": "yahoo.com"
-		// "DestinationId": 2
-	// }]
-// }
 function crawlerResultsToJson(raw) 
 {
 	// Define the return string 
@@ -131,35 +86,56 @@ app.post('/',function(req,res)
 	// Not completed list request
 	if(req.body['all'])
 	{
-		// Check if the cookie id exists 
-		var result = isCookiePresent(pool, 2);
-		console.log(result);
-		return;
+		// Check if the cookie is present first 
+		var queryString = 'SELECT COUNT(Id) AS Count FROM wc_UserSearches ' 
+		queryString += 'WHERE CookieId = ?';
+		cookie = 3; // Needs to come from front end 
 		
-		// Make the query string to pull back a single user query 
-		var queryString = 'SELECT US.CookieId, U.Name AS \'User\', US.SearchType, US.SearchDepth,'
-		queryString += ' URL.Url AS \'RootUrl\', URLS.Url AS \'SourceUrl\', URLD.Url AS \'DestinationUrl\',' 
-		queryString += ' URLS.Id AS \'SourceId\', URLD.Id AS \'DestinationId\''
-		queryString += ' FROM wc_UserSearches US'
-		queryString += ' INNER JOIN wc_SingleGraphs SG ON US.Id = SG.UserSearchId'
-		queryString += ' INNER JOIN wc_Edges E ON SG.Edge = E.Id'
-		queryString += ' INNER JOIN wc_Urls URL ON US.RootUrl = URL.Id'
-		queryString += ' INNER JOIN wc_Users U ON US.UserId = U.Id'
-		queryString += ' INNER JOIN wc_Urls URLS ON E.SorcUrlId = URLS.Id'
-		queryString += ' INNER JOIN wc_Urls URLD ON E.DestUrlId = URLD.Id'
-		queryString += ' WHERE US.CookieID = 2;'	
-		
-		// Call the select statement
-		pool.query(queryString, function(err, rows, fields)
+		// Run the query 
+		pool.query(queryString,[cookie], function(err, rows, fields)
 		{		
 			if(err)
 			{
-				res.type('text/plain');	
-				res.send(err);
-				return;
+				console.log(err.message);
+				return -1;
 			}
-			res.type('text/plain');	
-			res.send(crawlerResultsToJson(JSON.stringify(rows)));
+			
+			// If there is a record then return the whole data set for that record
+			if(rows[0].Count == 1)
+			{
+				// Make the query string to pull back a single user query 
+				queryString = "";
+				queryString = 'SELECT US.CookieId, U.Name AS \'User\', US.SearchType, US.SearchDepth,'
+				queryString += ' URL.Url AS \'RootUrl\', URLS.Url AS \'SourceUrl\', URLD.Url AS \'DestinationUrl\',' 
+				queryString += ' URLS.Id AS \'SourceId\', URLD.Id AS \'DestinationId\''
+				queryString += ' FROM wc_UserSearches US'
+				queryString += ' INNER JOIN wc_SingleGraphs SG ON US.Id = SG.UserSearchId'
+				queryString += ' INNER JOIN wc_Edges E ON SG.Edge = E.Id'
+				queryString += ' INNER JOIN wc_Urls URL ON US.RootUrl = URL.Id'
+				queryString += ' INNER JOIN wc_Users U ON US.UserId = U.Id'
+				queryString += ' INNER JOIN wc_Urls URLS ON E.SorcUrlId = URLS.Id'
+				queryString += ' INNER JOIN wc_Urls URLD ON E.DestUrlId = URLD.Id'
+				queryString += ' WHERE US.CookieID = ?;'	
+				
+				// Call the select statement
+				pool.query(queryString, [cookie], function(err, rows, fields)
+				{		
+					if(err)
+					{
+						res.type('text/plain');	
+						res.send(err);
+						return;
+					}
+					res.type('text/plain');	
+					res.send(crawlerResultsToJson(JSON.stringify(rows)));
+				});
+			}
+			else // Invoke the crawl
+			{
+				res.type('text/plain');	
+				res.send("HERE ARE THE CRAWL RESULTS");
+			}
+		
 		});
 	}	
 });
