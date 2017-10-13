@@ -11,14 +11,17 @@
 SELECT COUNT(Id) FROM wc_UserSearches 
 WHERE CookieId = ?;
 
--- 2) Count for (1) is more than 0 so the user has a stored crawl so return the data set. 
-SELECT * FROM wc_SingleGraphs 
-WHERE UserSearchId = 
-	(
-		SELECT Id FROM wc_UserSearches
-		WHERE CookieId = ?
-	)
-ORDER BY Id;
+-- 2) Count for (1) is more than 0 so the user has a stored crawl so return the data set.
+SELECT US.CookieId, U.Name AS 'User', US.SearchType, US.SearchDepth, URL.Url AS 'RootUrl', 
+URLS.Url AS 'SourceUrl', URLD.Url AS 'DestinationUrl', URLS.Id AS 'SourceId', URLD.Id AS 'DestinationId'
+FROM wc_UserSearches US 
+INNER JOIN wc_SingleGraphs SG ON US.Id = SG.UserSearchId 
+INNER JOIN wc_Edges E ON SG.Edge = E.Id 
+INNER JOIN wc_Urls URL ON US.RootUrl = URL.Id 
+INNER JOIN wc_Users U ON US.UserId = U.Id 
+INNER JOIN wc_Urls URLS ON E.SorcUrlId = URLS.Id 
+INNER JOIN wc_Urls URLD ON E.DestUrlId = URLD.Id 
+WHERE US.CookieID = 2;
 
 -- 3) When (1) above returns 0 means there is no cached user search so a new crawl is performed and 
 -- 	  during the crawl the following inserts take place.

@@ -1,0 +1,20 @@
+{
+	"MetaData": {
+		"CookieId": 4,
+		"User": "Ian",
+		"SearchType": "BFS",
+		"SearchDepth": 3,
+		"RootUrl": "google.com"
+	},
+	"Edges": [{
+		"SourceUrl": "google.com",
+		"SourceId": 1,
+		"DestinationUrl": "yahoo.com",
+		"DestinationId": 2
+	}, {
+		"SourceUrl": "google.com",
+		"SourceId": 1,
+		"DestinationUrl": "yahoo.com",
+		"DestinationId": 2
+	}]
+}
