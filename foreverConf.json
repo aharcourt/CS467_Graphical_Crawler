@@ -1,0 +1,6 @@
+{
+  "script": "crawler.js", // run this script
+  "watch": true, // restart the script when any file changes
+  "uid": "crawler", // a unique id for the script
+  "append": true // append logs (crashes otherwise)
+}

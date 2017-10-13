@@ -4,7 +4,8 @@
   "description": "Graphical Crawler for CS467",
   "main": "crawler.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "./scripts/start"
   },
   "author": "Hercules Group",
   "license": "ISC",
