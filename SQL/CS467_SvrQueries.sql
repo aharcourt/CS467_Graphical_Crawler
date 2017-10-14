@@ -36,7 +36,6 @@ BEGIN
 		SELECT COUNT(Id) FROM wc_Urls
 		WHERE Url = url
 	);
-    
     IF present = 0 THEN
 		INSERT INTO wc_Urls(Url) VALUES(url);	
 	END IF;

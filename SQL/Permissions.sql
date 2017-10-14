@@ -1,14 +1,17 @@
 USE WebCrawler;
-CREATE USER 'harcoura'@'HerculesInstance' IDENTIFIED BY 'Samre1942??';
-Grant SELECT on *.* to 'harcoura'@'HerculesInstance';
-Grant INSERT on *.* to 'harcoura'@'HerculesInstance';
-Grant UPDATE on *.* to 'harcoura'@'HerculesInstance';
-Grant CREATE on *.* to 'harcoura'@'HerculesInstance';
-GRANT EXECUTE ON *.* TO 'harcoura'@'HerculesInstance';
+CREATE USER 'harcoura'@'%' IDENTIFIED BY 'Samre1942??';
+Grant SELECT on *.* to 'harcoura'@'%';
+Grant INSERT on *.* to 'harcoura'@'%';
+Grant UPDATE on *.* to 'harcoura'@'%';
+Grant CREATE on *.* to 'harcoura'@'%';
+GRANT EXECUTE ON *.* TO 'harcoura'@'%';
 
-CREATE USER 'robbinsn'@'HerculesInstance' IDENTIFIED BY 'Samre1942??';
-Grant SELECT on *.* to 'robbinsn'@'HerculesInstance';
-Grant INSERT on *.* to 'robbinsn'@'HerculesInstance';
-Grant UPDATE on *.* to 'robbinsn'@'HerculesInstance';
-Grant CREATE on *.* to 'robbinsn'@'HerculesInstance';
-GRANT EXECUTE ON *.* TO 'robbinsn'@'HerculesInstance';
+CREATE USER 'robbinsn'@'%' IDENTIFIED BY 'Samre1942??';
+Grant SELECT on *.* to 'robbinsn'@'%';
+Grant INSERT on *.* to 'robbinsn'@'%';
+Grant UPDATE on *.* to 'robbinsn'@'%';
+Grant CREATE on *.* to 'robbinsn'@'%';
+GRANT EXECUTE ON *.* TO 'robbinsn'@'%';
+
+-- SELECT * FROM information_schema.user_privileges;
+-- DROP USER 'harcoura'@'%'; DROP USER 'robbinsn'@'%';

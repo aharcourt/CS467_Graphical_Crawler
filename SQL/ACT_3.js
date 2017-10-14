@@ -17,21 +17,21 @@ app.set('port', 3000);
 
 // Create connection pool to local instance and student database in that instance
 // Only do once at the top 
-var pool = mysql.createPool(
-{
-	host  : 'localhost',
-	user  : 'root',
-	password: 'CowBoy12##',
-	database: 'webcrawler'
-});
-
 // var pool = mysql.createPool(
 // {
-	// host  : 'mysql.eecs.oregonstate.edu',
-	// user  : 'cs290_harcoura',
-	// password: '0996',
-	// database: 'cs290_harcoura'
+	// host  : 'localhost',
+	// user  : 'root',
+	// password: 'CowBoy12##',
+	// database: 'webcrawler'
 // });
+
+var pool = mysql.createPool(
+{
+	host  : 'herculesinstance.c9jhafqve2yh.us-west-2.rds.amazonaws.com',
+	user  : 'robbinsn',
+	password: 'Samre1942??',
+	database: 'WebCrawler'
+});
 
 
 // When called from the query string in the browser initially
@@ -89,7 +89,8 @@ app.post('/',function(req,res)
 		// Check if the cookie is present first 
 		var queryString = 'SELECT COUNT(Id) AS Count FROM wc_UserSearches ' 
 		queryString += 'WHERE CookieId = ?';
-		cookie = 3; // Needs to come from front end 
+		var cookie = req.body.cookie; // Needs to come from front end
+		var queryResult = "";
 		
 		// Run the query 
 		pool.query(queryString,[cookie], function(err, rows, fields)
@@ -130,10 +131,34 @@ app.post('/',function(req,res)
 					res.send(crawlerResultsToJson(JSON.stringify(rows)));
 				});
 			}
-			else // Invoke the crawl
+			else // This is where the crawl will be performed and all the edges inserted 
 			{
-				res.type('text/plain');	
-				res.send("HERE ARE THE CRAWL RESULTS");
+				// First insert the url to the url table - this sp returns 1 if the 
+				// url ends up in the table and 0 if it does not 
+				var url = req.body.root
+				queryString = "";
+				queryString = "CALL wcSp_InsertUrl(?)"
+				pool.query(queryString, [url], function(err, rows, fields)
+				{		
+					if(err)
+					{
+						res.type('text/plain');	
+						res.send(err);
+						return;
+					}
+					// If the sp inserts correctly than insert the user name
+					queryResult = "";
+					queryResult = JSON.parse(JSON.stringify(rows))[0][0];
+					if(queryResult.includes("SUCCESS"))
+					{
+						
+					}
+					else
+					{
+						res.type('text/plain');	
+						res.send(JSON.parse(JSON.stringify(rows))[0][0]);
+					}
+				});
 			}
 		
 		});
