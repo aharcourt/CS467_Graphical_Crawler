@@ -28,7 +28,7 @@ WHERE US.CookieID = 2;
 
 -- 	i) Insert into the URL table if the new root does not exist 
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `wcSp_InsertUrl`(IN url text)
+CREATE PROCEDURE `wcSp_InsertUrl`(IN url text)
 BEGIN
 	DECLARE present int;
     SET present = 
@@ -45,7 +45,7 @@ CALL `webcrawler`.`wcSp_InsertUrl`(?);
 
 -- 	ii) Insert into the user table if the user does not exist
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `wcSp_InsertUser`(IN name varchar(255))
+CREATE PROCEDURE `wcSp_InsertUser`(IN name varchar(255))
 BEGIN
 	DECLARE present int;
     SET present = 
@@ -62,7 +62,7 @@ CALL `webcrawler`.`wcSp_InsertUser`(?);
 
 -- iii) Insert into the search table finally 
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `wcSp_InsertSearch`(IN cookieId INT(11), IN userName varchar(255), IN sType varchar(255), IN sDepth INT(11), IN root text)
+CREATE PROCEDURE `wcSp_InsertSearch`(IN cookieId INT(11), IN userName varchar(255), IN sType varchar(255), IN sDepth INT(11), IN root text)
 BEGIN
 	DECLARE userId int;
 	DECLARE urlId int;
@@ -85,7 +85,7 @@ CALL `webcrawler`.`wcSp_InsertSearch`(?, ?, ?, ?, ?);
 
 -- iv) Insert to the edge table - looping on the client side  
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `wcSp_InsertEdge`(IN sorc text, IN dest text)
+CREATE PROCEDURE `wcSp_InsertEdge`(IN sorc text, IN dest text)
 BEGIN
 	-- First insert the two urls into the url table. This SP checks for presence 
     CALL webcrawler.wcSp_InsertUrl(sorc);
@@ -99,7 +99,7 @@ END$$
 
 -- v) Insert to the single graph table for the user 
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `wcSp_InsertEdgeSingleGraph`(IN cookie INT, IN sorc text, IN dest text)
+CREATE PROCEDURE `wcSp_InsertEdgeSingleGraph`(IN cookie INT, IN sorc text, IN dest text)
 BEGIN
 	DECLARE sId INT(11);
     DECLARE dId INT(11);
