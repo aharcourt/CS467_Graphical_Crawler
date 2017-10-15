@@ -4,6 +4,8 @@
   "description": "Graphical Crawler for CS467",
   "main": "crawler.js",
   "scripts": {
+    "test": "mocha -r ./test/setup.js",
+    "test:amazing": "mocha -r ./test/setupAmazing -R nyan",
     "stop": "./node_modules/forever/bin/forever stopall",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "./scripts/start"
@@ -18,5 +20,11 @@
     "mysql": "^2.8.0",
     "request-promise-native": "^1.0.5",
     "valid-url": "^1.0.9"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^4.0.1",
+    "sinon": "^4.0.1",
+    "sinon-chai": "^2.14.0"
   }
 }
