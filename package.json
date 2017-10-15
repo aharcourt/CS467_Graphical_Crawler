@@ -4,6 +4,7 @@
   "description": "Graphical Crawler for CS467",
   "main": "crawler.js",
   "scripts": {
+    "stop": "./node_modules/forever/bin/forever stopall",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "./scripts/start"
   },
@@ -11,10 +12,11 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.13.3",
+    "cheerio": "latest",
     "express": "^4.13.2",
     "forever": "^0.15.3",
     "mysql": "^2.8.0",
-    "request": "^2.80.0",
-    "cheerio": "latest"
+    "request-promise-native": "^1.0.5",
+    "valid-url": "^1.0.9"
   }
 }
