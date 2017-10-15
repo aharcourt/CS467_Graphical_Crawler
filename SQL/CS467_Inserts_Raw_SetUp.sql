@@ -21,3 +21,5 @@ VALUES('http://www.google.com'),('http://www.yahoo.com'),
  -- Single Graphs 
  INSERT INTO wc_SingleGraphs(UserSearchId, Edge) 
  VALUES(1,1),(1,3),(1,4),(1,5),(2,5),(2,6),(2,7);
+ 
+ INSERT INTO wc_TempEdges(SorcUrl, DestUrl, CookieId) VALUES("https://yahoos.com", "http://methodicalillusion.com", 3), ("https://yaho.com", "http://lunacy.com", 3);
