@@ -4,6 +4,11 @@ module.exports = {
         "node": true
     },
     "extends": "eslint:recommended",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "experimentalObjectRestSpread": true,
+        },
+    },
     "rules": {
         "indent": [
             "error",
@@ -31,12 +36,19 @@ module.exports = {
              "error",
              "never"
         ],
+        // The nature of callback hell is that we often define callbacks with
+        // unused arguments, like "next" in the 500 page. Because it is so
+        // frequent in our use case, I'll just ignore variables in arguments
+        "no-unused-vars": [
+             "error",
+             { "args": "none" }
+        ],
 
 
 /*******  Just style things *********/
         "array-bracket-spacing": [
              "error",
              "always"
-        ]
+        ],
     }
 };

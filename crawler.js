@@ -1,25 +1,22 @@
-var express = require('express');
-var request = require('request');
-var cheerio = require('cheerio');
-var bodyParser = require('body-parser');
-var mysql = require('./lib/dbcon');
-var search = require('./lib/searches');
+var express = require("express");
+var bodyParser = require("body-parser");
+var search = require("./lib/searches");
 
 // Create server object
 var app = express();
 
 // Set port
-app.set('port', 5545);
+app.set("port", 55455);
 app.use(bodyParser.urlencoded({extended: false}));
-app.use(express.static('public'));
+app.use(express.static("public"));
 
 // Route to main page
-app.get('/', function(req, res, next) {
-    res.sendFile('index.html');
+app.get("/", function(req, res, next) {
+    res.sendFile("index.html");
 });
 
 // POST to crawler
-app.post('/crawl', function(req, res, next) {
+app.post("/crawl", function(req, res, next) {
     if(req.body.SearchType == "BFS") {
         // return a promise from search.breadthFS. Now we can add success and
         // failure handlers to the promise instead of as a callback. "then"
@@ -34,7 +31,7 @@ app.post('/crawl', function(req, res, next) {
 
         bfs.then((edges) => {
             res.send(edges);
-        })
+        });
 
         bfs.catch((err) => {
             next(err);
@@ -44,19 +41,19 @@ app.post('/crawl', function(req, res, next) {
 });
 
 // 404 Error
-app.use(function(req,res){
-    res.status(404)
-    res.send('404 - Page not found.');
+app.use(function(req, res){
+    res.status(404);
+    res.send("404 - Page not found.");
 });
 
 // 500 Error
 app.use(function(err, req, res, next){
     console.error(err.stack);
-    res.type('plain/text');
-    res.status(500)
-    res.send('500 - Something went wrong.');
+    res.type("plain/text");
+    res.status(500);
+    res.send("500 - Something went wrong.");
 });
 
-app.listen(app.get('port'), function(){
-    console.log('Express started on http://flip3.engr.oregonstate.edu:' + app.get('port') + '; press Ctrl-C to terminate.');
+app.listen(app.get("port"), function(){
+    console.log("Express started on http://flip3.engr.oregonstate.edu:" + app.get("port") + "; press Ctrl-C to terminate.");
 });
