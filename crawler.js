@@ -1,9 +1,9 @@
-var express = require("express");
-var bodyParser = require("body-parser");
-var search = require("./lib/searches");
+let express = require("express");
+let bodyParser = require("body-parser");
+let search = require("./lib/searches");
 
 // Create server object
-var app = express();
+let app = express();
 
 // Set port
 app.set("port", 55455);
@@ -27,7 +27,7 @@ app.post("/crawl", function(req, res, next) {
         // promise.then(stuffWhichReturnsANumber);
         // promise.then(stuffWhichUsesThatNumber);
         // promise.catch(stuffToDoWithErrors);
-        var bfs = search.breadthFS(req.body.RootURL, req.body.SearchDepth);
+        let bfs = search.breadthFS(req.body.RootURL, req.body.SearchDepth);
 
         bfs.then((edges) => {
             res.send(edges);

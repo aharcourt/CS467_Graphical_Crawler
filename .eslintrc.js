@@ -43,12 +43,25 @@ module.exports = {
              "error",
              { "args": "none" }
         ],
-
+        // "var" in javascript creates a variable in the function scope, even
+        // if the declaration happens inside a for or while loop. "let" behaves
+        // more like we expect variable assignment to work from other languages:
+        // a variable defined in a loop is not available out of the loop. If
+        // you will need it, you have to define it before the loop, like in C.
+        "no-var": "error",
 
 /*******  Just style things *********/
         "array-bracket-spacing": [
              "error",
              "always"
         ],
+        "block-spacing": "error",
+        "brace-style": [
+            "error",
+            "1tbs",
+            { "allowSingleLine": true }
+        ],
+        "no-tabs": "error",
+        "no-trailing-spaces": "error"
     }
 };
