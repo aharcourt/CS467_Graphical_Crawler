@@ -7,8 +7,10 @@
     "test": "mocha -r ./test/setup.js",
     "test:amazing": "mocha -r ./test/setupAmazing -R nyan",
     "stop": "./node_modules/forever/bin/forever stopall",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "./scripts/start"
+    "start": "./scripts/start",
+    "logs": "./node_modules/forever/bin/forever logs crawler.js",
+    "lint": "./node_modules/.bin/eslint . --color",
+    "lint:fix": "./node_modules/.bin/eslint . --color --fix"
   },
   "author": "Hercules Group",
   "license": "ISC",
@@ -23,6 +25,7 @@
   },
   "devDependencies": {
     "chai": "^4.1.2",
+    "eslint": "^4.9.0",
     "mocha": "^4.0.1",
     "sinon": "^4.0.1",
     "sinon-chai": "^2.14.0"
