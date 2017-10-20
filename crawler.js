@@ -6,7 +6,7 @@ let search = require("./lib/searches");
 let app = express();
 
 // Set port
-app.set("port", 55455);
+app.set("port", 5545);
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(express.static("public"));
@@ -39,9 +39,18 @@ app.post("/crawl", function(req, res, next) {
             return;
         });
     } else if (req.body.SearchType === "DFS") {
-        throw new Error("not yet implemented")
+        let dfs = search.depthFS(req.body.RootURL, req.body.SearchDepth);
+
+        dfs.then((edges) => {
+            res.send(edges);
+        });
+
+        dfs.catch((err) => {
+            next(err);
+            return;
+        });
     } else {
-        throw new Error("not yet implemented")
+        throw new Error("Invalid SearchType");
     }
 });
 
