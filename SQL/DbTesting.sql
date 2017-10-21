@@ -48,7 +48,7 @@ CALL wcSp_InsertUrl(@url1, @resLocal);
 SET @countLocal = (SELECT COUNT(Id) FROM wc_Urls WHERE Url = @url1);
 SELECT IF(@resLocal = 1 AND @countLocal = 1, 'PASSED', 'FAILED') AS `wcSp_InsertUrl`;
 DELETE FROM wc_Urls WHERE Url = @url1;
-SELECT * FROM wc_Urls; SELECT @url1;
+-- SELECT * FROM wc_Urls; SELECT @url1;
 SET SQL_SAFE_UPDATES = 1;
 
 -- 4) wc_InsertSearch
