@@ -8,6 +8,7 @@ let app = express();
 // Set port
 app.set("port", 55455);
 app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
 app.use(express.static("public"));
 
 // Route to main page
@@ -37,6 +38,10 @@ app.post("/crawl", function(req, res, next) {
             next(err);
             return;
         });
+    } else if (req.body.SearchType === "DFS") {
+        throw new Error("not yet implemented")
+    } else {
+        throw new Error("not yet implemented")
     }
 });
 

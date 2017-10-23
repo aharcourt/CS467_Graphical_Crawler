@@ -30,6 +30,8 @@ window.Hercules.loadScripts = function loadScripts(scripts) {
 };
 
 window.Hercules.loadScripts([
-    "./chart",
-    "./form"
+    "./form.js",
+    "./chart.js",
+    "./serverApi.js",
+    "./transformJSON.js"
 ]);

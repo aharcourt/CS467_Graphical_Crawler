@@ -1,5 +1,4 @@
 /* global window, document, cytoscape */
-
 window.Hercules.setUpChart = function setUpChart() {
     const DEFAULT_JSON = {
         container: document.getElementById("cyChart"),
@@ -57,3 +56,19 @@ window.Hercules.setUpChart = function setUpChart() {
 };
 
 window.Hercules.setUpChart();
+
+window.Hercules.populateChart = function populateChart(json) {
+    if (json == null) {
+        return;
+    }
+    let chartJSON = {
+        ...window.Hercules.DEFAULT_JSON,
+        ...window.Hercules.transformJSON(json)
+    };
+    window.Hercules.cy.json(chartJSON);
+    setTimeout(() => {
+        // lay out the nodes more cleanly
+        let coseLayout = window.Hercules.cy.layout({ name: "cose" });
+        coseLayout.run();
+    });
+};

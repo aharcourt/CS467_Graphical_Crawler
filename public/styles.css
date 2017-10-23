@@ -1,5 +1,26 @@
+body {
+  max-width: 802px; /* chart width + border */
+  margin: 8px auto;
+  background-color: antiquewhite;
+  font-family: sans-serif;
+}
+
+form {
+  padding: 0.5em;
+  font-size: 18px;
+}
+
+.field {
+  padding-bottom: 0.5em;
+}
+
+.field > label {
+  padding-right: 0.5em;
+}
+
 #cyChart {
   width: 800px;
   height: 600px;
   border: 1px solid black;
+  background-color: white;
 }
