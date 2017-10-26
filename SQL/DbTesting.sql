@@ -12,12 +12,12 @@ SET @maxCookie = (SELECT MAX(CookieId) FROM wc_UserSearches);
 INSERT INTO wc_TempEdges(SorcUrl, DestUrl, CookieId)   
 VALUES(@url1, @url2, (@maxCookie + 1)), (@url3, @url4, (@maxCookie + 1));
 CALL wcSp_InsertNewTree('TESTROOT', 'TESTUSER', (@maxCookie + 1), 'TESTTYPE', 22, @resLocal);
-SET @resLocal = -99;
-CALL wcSp_DoesCookieExist((@maxCookie + 2), @resLocal); -- DOES NOT EXIST BASIC PRESENCE
-SELECT IF(@resLocal = 0, 'PASSED', 'FAILED') AS `wc_DoesCookieExist NOT Present`;
-SET @resLocal = -99;
-CALL wcSp_DoesCookieExist((@maxCookie + 1), @resLocal); -- DOES EXIST BASIC PRESENCE
-SELECT IF(@resLocal = 1, 'PASSED', 'FAILED') AS `wc_DoesCookieExist Present`;
+SET @resLocal1 = -99;
+CALL wcSp_DoesCookieExist((@maxCookie + 2), @resLocal1); -- DOES NOT EXIST BASIC PRESENCE
+SELECT IF(@resLocal1 = 0, 'PASSED', 'FAILED') AS `wc_DoesCookieExist NOT Present`;
+SET @resLocal2 = -99;
+CALL wcSp_DoesCookieExist((@maxCookie + 1), @resLocal2); -- DOES EXIST BASIC PRESENCE
+SELECT IF(@resLocal1 = 0 AND @resLocal2 = 1, 'PASSED', 'FAILED') AS `wc_DoesCookieExist`;
 SET SQL_SAFE_UPDATES = 0;
 DELETE FROM wc_SingleGraphs WHERE UserSearchId = (SELECT Id FROM wc_UserSearches WHERE CookieId = @maxCookie + 1);
 DELETE FROM wc_UserSearches WHERE CookieId = @maxCookie + 1;
@@ -51,7 +51,7 @@ DELETE FROM wc_Urls WHERE Url = @url1;
 -- SELECT * FROM wc_Urls; SELECT @url1;
 SET SQL_SAFE_UPDATES = 1;
 
--- 4) wc_InsertSearch
+-- 4) wcSp_InsertSearch
 SET @resLocal = -99; SET @countLocal = -99;
 SET SQL_SAFE_UPDATES = 0;
 INSERT INTO wc_Users(`Name`) VALUES('TESTUSER');
@@ -65,7 +65,7 @@ DELETE FROM wc_Urls WHERE Url = 'TESTROOT';
 DELETE FROM wc_UserSearches WHERE CookieId = (@maxCookie + 1); 
 SET SQL_SAFE_UPDATES = 1;
 
--- 5) wc_InsertEdge 
+-- 5) wcSp_InsertEdge 
 SET @resLocal = -99; SET @countLocal = -99;
 SET SQL_SAFE_UPDATES = 0;
 SET @url1 = CONCAT('http://', CONCAT(CAST(unix_timestamp() AS char), '1'));
@@ -80,7 +80,7 @@ AND DestUrlId = (SELECT Id FROM wc_Urls WHERE Url = @url2);
 DELETE FROM wc_Urls WHERE Url IN(@url1, @url2);
 SET SQL_SAFE_UPDATES = 1;
 
--- 6) wc_InsertIntoTempEdges 
+-- 6) wcSp_InsertIntoTempEdges 
 SET @resLocal = -99; SET @countLocal = -99;
 SET SQL_SAFE_UPDATES = 0;
 SET @url1 = CONCAT('http://', CONCAT(CAST(unix_timestamp() AS char), '1'));
