@@ -17,9 +17,11 @@
   "dependencies": {
     "body-parser": "^1.13.3",
     "cheerio": "latest",
+    "cookie-parser": "^1.4.3", 
     "express": "^4.13.2",
     "forever": "^0.15.3",
     "mysql": "^2.8.0",
+    "request": "^2.83.0", 
     "request-promise-native": "^1.0.5",
     "valid-url": "^1.0.9"
   },
