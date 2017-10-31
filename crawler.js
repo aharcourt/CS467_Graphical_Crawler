@@ -68,6 +68,8 @@ app.use(function(err, req, res, next){
     res.send("500 - Something went wrong.");
 });
 
-app.listen(app.get("port"), function(){
+let server = app.listen(app.get("port"), function(){
     console.log("Express started on http://flip3.engr.oregonstate.edu:" + app.get("port") + "; press Ctrl-C to terminate.");
 });
+
+module.exports = server; // for testing
