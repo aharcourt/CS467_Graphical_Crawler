@@ -31,59 +31,34 @@ app.post("/crawl", function(req, res, next) {
     
     // Check if search is already cached for user
     let isSearch = dbAPI.doesSearchExist(cookie, 'Ian Dalrymple', req.body.SearchType, req.body.SearchDepth, req.body.RootURL);
-    
-    
-    isSearch.then((results) => {
-        return results;
-    }).then((searchExists) => {
-        // If search is cached, return results
-        if (searchExists) {
+     
+    isSearch.then((searchExists) => {
+      
+        let crawl = search.crawl(req.body.SearchType, req.body.RootURL, req.body.SearchDepth, cookie, searchExists);
+
+        crawl.then((result) => {
             let cachedSearch = dbAPI.getExistingTree(cookie, 'Ian Dalrymple', req.body.SearchType, req.body.SearchDepth, req.body.RootURL);
+            
+            // Get tree from database and return it with metadata
             cachedSearch.then((edges) => { 
-                res.send(edges);
+                let response = new Object();
+                response.Status = result;
+                response.Edges = JSON.parse(edges);
+               
+                res.send(response);
             });
             cachedSearch.catch((err) => {
-                next(err);
-                return;
+                throw err;
             });
-        // If search is not cached, perform DFS or BFS search
-        } else {
-            if(req.body.SearchType == "BFS") {
-                // return a promise from search.breadthFS. Now we can add success and
-                // failure handlers to the promise instead of as a callback. "then"
-                // handlers are called when a promise resolve, and "catch" handlers are
-                // called when it rejects (this happens automatically if there's an
-                // error). When a handler returns, its return value (or thrown error) is
-                // packacged into the same promise, so you can call it like:
-                // promise.then(stuffWhichReturnsANumber);
-                // promise.then(stuffWhichUsesThatNumber);
-                // promise.catch(stuffToDoWithErrors);
-                let bfs = search.breadthFS(req.body.RootURL, req.body.SearchDepth, cookie);
-
-                bfs.then((edges) => {
-                    res.send(edges);
-                });
-
-                bfs.catch((err) => {
-                    next(err);
-                    return;
-                });
-            } else if (req.body.SearchType === "DFS") {
-                let dfs = search.depthFS(req.body.RootURL, req.body.SearchDepth, cookie);
-
-                dfs.then((edges) => {
-                    res.send(edges);
-                });
-
-                dfs.catch((err) => {
-                    next(err);
-                    return;
-                });
-            } else {
-                throw new Error("Invalid SearchType");
-            }
-        }
-    });
+        });
+        crawl.catch((err) => {
+            throw err;
+        });
+    }); 
+    isSearch.catch((err) => {
+        next(err);
+        return;
+    });    
 });
 
 // 404 Error
