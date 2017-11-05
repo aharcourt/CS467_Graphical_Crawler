@@ -1,0 +1,3 @@
+# Ian prefers very different code style for his javascript, so ignore DB-related files
+SQL/*
+lib/dbApi.js
