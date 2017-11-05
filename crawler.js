@@ -22,27 +22,43 @@ app.get("/", function(req, res, next) {
 // POST to crawler
 app.post("/crawl", function(req, res, next) {
     let cookie = req.cookies.cookieID;
+    let searchType = req.body.SearchType;
+    let searchDepth = req.body.SearchDepth;
+    let rootURL = req.body.RootURL;
+    let keyword = req.body.Keyword || ""; // the default keyword is an empty string so the SP doesn't explode.
+    let keywordURL = req.body.KeywordURL || "";
 
     // If no cookie, create one
     if (cookie === undefined) {
-        let cookie = Math.floor(Math.random() * (90000) + 10000);
+        cookie = Math.floor(Math.random() * (90000)) + 10000;
         res.cookie("cookieID", cookie);
     }
 
     // Check if search is already cached for user
-    let isSearch = dbAPI.doesSearchExist(cookie, "Ian Dalrymple", req.body.SearchType, req.body.SearchDepth, req.body.RootURL);
+    let isSearch = dbAPI.doesSearchExist(cookie, "Ian Dalrymple", searchType, searchDepth, rootURL, keyword, keywordURL);
 
     isSearch.then((searchExists) => {
 
-        let crawl = search.crawl(req.body.SearchType, req.body.RootURL, req.body.SearchDepth, cookie, searchExists);
+        let crawl;
+        if (searchExists) {
+            // Mimic a successful crawl which found the expected keywordURL
+            let fakeResult = {
+                status: keywordURL === "" ? search.SUCCESS : search.TERM_FOUND,
+                keywordURL: keywordURL,
+            };
+            crawl = Promise.resolve(fakeResult);
+        } else {
+            crawl = search.crawl(searchType, rootURL, searchDepth, cookie, keyword);
+        }
 
         crawl.then((result) => {
-            let cachedSearch = dbAPI.getExistingTree(cookie, "Ian Dalrymple", req.body.SearchType, req.body.SearchDepth, req.body.RootURL);
+            // Extract the resulting crawl, which was stored during search.crawl
+            let cachedSearch = dbAPI.getExistingTree(cookie, "Ian Dalrymple", searchType, searchDepth, rootURL, keyword, result.keywordURL);
 
             // Get tree from database and return it with metadata
             cachedSearch.then((edges) => {
                 let response = new Object();
-                response.Status = result;
+                response.result = result;
                 response.Edges = JSON.parse(edges);
 
                 res.send(response);
@@ -54,6 +70,8 @@ app.post("/crawl", function(req, res, next) {
         crawl.catch((err) => {
             throw err;
         });
+
+        return crawl;
     });
     isSearch.catch((err) => {
         next(err);
