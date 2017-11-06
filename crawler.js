@@ -16,26 +16,53 @@ app.use(express.static("public"));
 
 // Route to main page
 app.get("/", function(req, res, next) {
+    console.log("GET /");
     res.sendFile("index.html");
+});
+
+// POST to sign in to a user account (just a name)
+app.post("/signin", function(req, res, next) {
+    let name = req.body.Name;
+    console.log("POST /signin", name);
+    if (!name) {
+        res.status = 400;
+        res.send("400 - Bad Request");
+        return;
+    }
+    dbAPI.getUserID(name).then((userID) => {
+        // If no user, create one. Future crawls will add to this user's crawls
+        if (userID == null) {
+            // TODO: ask the DB for a new user id so they aren't possibly clashing
+            userID = Math.floor(Math.random() * (90000)) + 10000;
+        }
+        res.cookie("UserID", userID);
+        res.cookie("Name", name);
+
+        // TODO: these should probably be one request, but it's weird to return
+        // two kinds of things.
+        return dbAPI.getPreviousSearches(userID).then((prevSearches) => {
+            res.send(prevSearches);
+        });
+    }).catch((err) => {
+        next(err);
+    });
 });
 
 // POST to crawler
 app.post("/crawl", function(req, res, next) {
-    let cookie = req.cookies.cookieID;
+    let user = {
+        id: req.cookies.UserID,
+        name: req.cookies.Name
+    };
     let searchType = req.body.SearchType;
     let searchDepth = req.body.SearchDepth;
     let rootURL = req.body.RootURL;
     let keyword = req.body.Keyword || ""; // the default keyword is an empty string so the SP doesn't explode.
     let keywordURL = req.body.KeywordURL || "";
-
-    // If no cookie, create one
-    if (cookie === undefined) {
-        cookie = Math.floor(Math.random() * (90000)) + 10000;
-        res.cookie("cookieID", cookie);
-    }
+    console.log("POST /crawl", searchType, rootURL);
 
     // Check if search is already cached for user
-    let isSearch = dbAPI.doesSearchExist(cookie, "Ian Dalrymple", searchType, searchDepth, rootURL, keyword, keywordURL);
+    let isSearch = dbAPI.doesSearchExist(user.id, user.name, searchType, searchDepth, rootURL, keyword, keywordURL);
 
     isSearch.then((searchExists) => {
 
@@ -48,12 +75,12 @@ app.post("/crawl", function(req, res, next) {
             };
             crawl = Promise.resolve(fakeResult);
         } else {
-            crawl = search.crawl(searchType, rootURL, searchDepth, cookie, keyword);
+            crawl = search.crawl(searchType, rootURL, searchDepth, user, keyword);
         }
 
         crawl.then((result) => {
             // Extract the resulting crawl, which was stored during search.crawl
-            let cachedSearch = dbAPI.getExistingTree(cookie, "Ian Dalrymple", searchType, searchDepth, rootURL, keyword, result.keywordURL);
+            let cachedSearch = dbAPI.getExistingTree(user.id, user.name, searchType, searchDepth, rootURL, keyword, result.keywordURL);
 
             // Get tree from database and return it with metadata
             cachedSearch.then((edges) => {
