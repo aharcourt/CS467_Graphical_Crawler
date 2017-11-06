@@ -55,8 +55,6 @@ window.Hercules.setUpChart = function setUpChart() {
     });
 };
 
-window.Hercules.setUpChart();
-
 window.Hercules.populateChart = function populateChart(json) {
     if (json == null) {
         return;
