@@ -30,7 +30,7 @@ app.post("/crawl", function(req, res, next) {
     } 
     
     // Check if search is already cached for user
-    let isSearch = dbAPI.doesSearchExist(cookie, 'Ian Dalrymple', req.body.SearchType, req.body.SearchDepth, req.body.RootURL);
+    let isSearch = dbAPI.doesSearchExist(cookie, 'Ian Dalrymple', req.body.SearchType, req.body.SearchDepth, req.body.RootURL, "keyword");
      
     isSearch.then((searchExists) => {
       
