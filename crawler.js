@@ -22,6 +22,7 @@ app.get("/", function(req, res, next) {
 // POST to crawler
 app.post("/crawl", function(req, res, next) {
     let cookie = req.cookies.cookieID; 
+    let searchID = new Date().getUTCMilliseconds();
      
     // If no cookie, create one
     if (cookie === undefined) { 
@@ -30,14 +31,15 @@ app.post("/crawl", function(req, res, next) {
     } 
     
     // Check if search is already cached for user
-    let isSearch = dbAPI.doesSearchExist(cookie, 'Ian Dalrymple', req.body.SearchType, req.body.SearchDepth, req.body.RootURL, "keyword");
+    let isSearch = dbAPI.doesSearchExist(cookie, 'Ian Dalrymple', req.body.SearchType, req.body.SearchDepth, req.body.RootURL, req.body.Keyword);
      
     isSearch.then((searchExists) => {
+        
       
-        let crawl = search.crawl(req.body.SearchType, req.body.RootURL, req.body.SearchDepth, cookie, searchExists);
+        let crawl = search.crawl(req.body.SearchType, req.body.RootURL, req.body.SearchDepth, cookie, searchID, req.body.Keyword, searchExists);
 
         crawl.then((result) => {
-            let cachedSearch = dbAPI.getExistingTree(cookie, 'Ian Dalrymple', req.body.SearchType, req.body.SearchDepth, req.body.RootURL);
+            let cachedSearch = dbAPI.getExistingTree(cookie, 'Ian Dalrymple', req.body.SearchType, req.body.SearchDepth, req.body.RootURL, req.body.Keyword);
             
             // Get tree from database and return it with metadata
             cachedSearch.then((edges) => { 
