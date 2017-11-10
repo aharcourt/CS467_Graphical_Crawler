@@ -23,7 +23,7 @@ app.get("/", function(req, res, next) {
 // POST to crawler
 app.post("/crawl", function(req, res, next) {
     let cookie = req.cookies.cookieID;
-    let searchID = req.body.SearchID || new Date().getUTCMilliseconds();
+    let searchID = new Date().valueOf();
     let keyword = req.body.Keyword || "";
 
     // If no cookie, create one
@@ -45,9 +45,8 @@ app.post("/crawl", function(req, res, next) {
             // Get tree from database and return it with metadata
             return cachedSearch.then((edges) => {
                 let response = new Object();
-                response.Status = result;
+                response.Result = result;
                 response.Edges = JSON.parse(edges);
-
                 res.send(response);
             });
         });
