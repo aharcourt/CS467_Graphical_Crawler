@@ -10,7 +10,6 @@ module.exports = {
         },
     },
     "rules": {
-        "no-debugger": "off",
         "indent": [
             "error",
             4

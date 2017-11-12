@@ -36,10 +36,16 @@ app.post("/crawl", function(req, res, next) {
     // Check if search is already cached for user
     let isSearch = dbAPI.doesSearchExist(cookie, "Ian Dalrymple", req.body.SearchType, req.body.SearchDepth, req.body.RootURL, keyword);
 
-    return isSearch.then((searchExists) => {
+    isSearch.then((searchExists) => {
         let crawl = search.crawl(req.body.SearchType, req.body.RootURL, req.body.SearchDepth, cookie, searchID, keyword, searchExists);
 
         return crawl.then((result) => {
+            // If search was invalid, return result and empty edge list
+            if (result.status === search.INVALID) {
+                res.send({ Result: result, Edges: [] });
+                return;
+            }
+            
             let cachedSearch = dbAPI.getExistingTree(cookie, "Ian Dalrymple", req.body.SearchType, req.body.SearchDepth, req.body.RootURL, keyword);
 
             // Get tree from database and return it with metadata
