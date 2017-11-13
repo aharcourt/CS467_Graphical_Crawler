@@ -33,5 +33,6 @@ window.Hercules.loadScripts([
     "./transformJSON.js",
     "./chart.js",
     "./serverApi.js",
-    "./form.js"
+    "./form.js",
+    "./run.js"
 ]);

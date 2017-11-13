@@ -226,5 +226,3 @@ window.Hercules.setUpForm = function setUpForm() {
         () => Boolean(document.getElementById("root"))
     );
 };
-
-window.Hercules.setUpForm();

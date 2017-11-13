@@ -1,2 +1,3 @@
 lib/dbAPI.js
+test/dbTestApi.js
 SQL/*.js

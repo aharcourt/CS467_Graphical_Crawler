@@ -6,6 +6,7 @@ window.Hercules.sendFormData = function sendFormData(params) {
     fetch("/crawl", {
         method: "POST",
         headers: new Headers({ "Content-Type": "application/json" }),
+        credentials: "same-origin", // enable cookies
         body: JSON.stringify(params)
     }).then((response) => {
         if (!response.ok) {
