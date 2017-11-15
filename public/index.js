@@ -32,6 +32,7 @@ window.Hercules.loadScripts = function loadScripts(scripts) {
 window.Hercules.loadScripts([
     "./chart.js",
     "./form.js",
+    "./PreviousSearches.js",
     "./SearchCookie.js",
     "./SearchForm.js",
     "./serverApi.js",

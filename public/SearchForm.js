@@ -21,9 +21,11 @@ window.Hercules.SearchForm = class SearchForm {
         this._handleSearchTypeChange = this._handleSearchTypeChange.bind(this);
         this._handleSearchDepthChange = this._handleSearchDepthChange.bind(this);
         this._handleKeywordChange = this._handleKeywordChange.bind(this);
+        this._handlePrevSearchChange = this._handlePrevSearchChange.bind(this);
 
         // Do the thing.
         this._createForm();
+        this.updatePreviousSearches();
     }
 
     // Add error messages to fields
@@ -47,6 +49,17 @@ window.Hercules.SearchForm = class SearchForm {
             }
             }
         });
+    }
+
+    updatePreviousSearches() {
+        if (this.prevSearches) {
+            this.prevSearches.update();
+            if (this.prevSearches.empty()) {
+                this.prevSearchesWrapper.style.display = "none";
+            } else {
+                this.prevSearchesWrapper.style.display = "block";
+            }
+        }
     }
 
     // Build a <form> HTML tag with references to all its inputs. Bind appropriate
@@ -147,6 +160,29 @@ window.Hercules.SearchForm = class SearchForm {
         keywordField.appendChild(this.keyword);
         this.formTag.appendChild(keywordField);
 
+        // wrapper for previous searches which is hidden when there are none
+        this.prevSearchesWrapper = this._createElement("div", { id: "prevSearches" });
+        this.formTag.appendChild(this.prevSearchesWrapper);
+
+        let separator = this._createElement("em", {
+            id: "separator",
+            textContent: "-OR-"
+        });
+        this.prevSearchesWrapper.appendChild(separator);
+
+        let prevSearchesField = this._createField();
+        this.prevSearches = new window.Hercules.PreviousSearches({
+            id: "searches",
+            onchange: this._handlePrevSearchChange
+        });
+        let prevSearchesLabel = this._createElement("label", {
+            for: "searches",
+            textContent: "Saved Searches"
+        });
+        prevSearchesField.appendChild(prevSearchesLabel);
+        prevSearchesField.appendChild(this.prevSearches.domElement);
+        this.prevSearchesWrapper.appendChild(prevSearchesField);
+
         // Submit button
         this.submit = this._createElement("input", {
             type: "submit",
@@ -193,9 +229,11 @@ window.Hercules.SearchForm = class SearchForm {
         this.update({ SearchDepth: value });
     }
     _handleKeywordChange(ev) {
-        console.log("keywordChanged");
         let value = ev.target.value;
         this.update({ Keyword: value });
+    }
+    _handlePrevSearchChange(prevSearchParams) {
+        this.update(prevSearchParams);
     }
 
     // Validate the state, store it, and update the HTML
@@ -207,6 +245,11 @@ window.Hercules.SearchForm = class SearchForm {
     // Update the form data with new values. NEVER reassign this._formData, it
     // is a reference to the value sent to the server.
     _updateFormData(additionalState) {
+        if (!additionalState || !additionalState.ExistingSearch) {
+            // If anything other than the previous searches dropdown is touched,
+            // we are no longer submitting an existing search.
+            delete this._formData.ExistingSearch;
+        }
         const newState = Object.assign({}, this._formData, additionalState);
 
         this._formData.RootURL = newState.RootURL;
@@ -236,5 +279,6 @@ window.Hercules.SearchForm = class SearchForm {
         this.bfs.checked = (this._formData.SearchType === "BFS");
         this.searchDepth.value = this._formData.SearchDepth;
         this.keyword.value = this._formData.Keyword;
+        this.prevSearches.setSelected(this._formData.ExistingSearch);
     }
 };

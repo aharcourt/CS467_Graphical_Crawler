@@ -20,13 +20,15 @@ window.Hercules.setUpForm = function setUpForm() {
         let errors = validateFormData(params);
         searchForm.applyErrors(errors);
         if (errors.length == 0) {
-            window.Hercules.sendFormData(params);
+            window.Hercules.sendFormData(params).then((json) => {
+                window.Hercules.populateChart(json);
+                searchForm.updatePreviousSearches();
+            });
         }
     };
 
     searchForm = new window.Hercules.SearchForm({
         params: params,
-        previousSearchCookie: new window.Hercules.SearchCookie(document.cookie),
         onSubmit: handleSubmit
     });
     // for debug

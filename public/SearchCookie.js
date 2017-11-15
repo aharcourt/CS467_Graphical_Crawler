@@ -22,6 +22,10 @@ class SearchCookie {
         }
     }
 
+    getCookies() {
+        return this._cookies;
+    }
+
     withID(id) {
         return this._cookies.find((cookie) => {
             return cookie.cookieID === id;
@@ -56,7 +60,7 @@ class SearchCookie {
 
 /* globals window, module */
 // Expose the SearchCookie class to whoever is trying to consume it.
-if (window && window.Hercules) {
+if (typeof window !== "undefined" && window.Hercules) {
     // We're on the front-end, save the class to the Hercules namespace.
     window.Hercules.SearchCookie = SearchCookie;
 } else if (module) {

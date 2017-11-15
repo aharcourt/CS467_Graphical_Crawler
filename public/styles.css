@@ -23,6 +23,11 @@ form {
   color: darkred;
 }
 
+#separator {
+  margin-left: 0.5em;
+  margin-bottom: 0.5em;
+}
+
 #cyChart {
   width: 800px;
   height: 600px;
