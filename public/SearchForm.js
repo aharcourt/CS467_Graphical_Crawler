@@ -164,7 +164,7 @@ window.Hercules.SearchForm = class SearchForm {
         this.prevSearchesWrapper = this._createElement("div", { id: "prevSearches" });
         this.formTag.appendChild(this.prevSearchesWrapper);
 
-        let separator = this._createElement("em", {
+        let separator = this._createElement("i", {
             id: "separator",
             textContent: "-OR-"
         });
@@ -245,7 +245,7 @@ window.Hercules.SearchForm = class SearchForm {
     // Update the form data with new values. NEVER reassign this._formData, it
     // is a reference to the value sent to the server.
     _updateFormData(additionalState) {
-        if (!additionalState || !additionalState.ExistingSearch) {
+        if (!(additionalState && additionalState.ExistingSearch)) {
             // If anything other than the previous searches dropdown is touched,
             // we are no longer submitting an existing search.
             delete this._formData.ExistingSearch;
@@ -271,6 +271,7 @@ window.Hercules.SearchForm = class SearchForm {
         this._formData.SearchDepth = depth;
 
         this._formData.Keyword = newState.Keyword;
+        this._formData.ExistingSearch = newState.ExistingSearch;
     }
 
     _updateHTMLState() {

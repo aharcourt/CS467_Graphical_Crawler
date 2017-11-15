@@ -34,7 +34,9 @@ window.Hercules.setUpChart = function setUpChart() {
     // Make the url show up above the node when it is hovered
     cy.on("mouseover", "node", (ev) => {
         let node = ev.target;
-        let label = node.data("url") || "[undefined]";
+        let label = node.data("title") || "[undefined]";
+        label += " - ";
+        label += node.data("url") || "[undefined]";
         // The "label" field of the data object is usually empty. Give it a value.
         node.data("label", label);
     });

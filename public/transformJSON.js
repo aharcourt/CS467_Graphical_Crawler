@@ -7,34 +7,33 @@ window.Hercules.transformJSON = function transformJSON(json) {
         return {
             group: "edges",
             data: {
-                // TODO: use database id instead of meaningless number
-                id: String(Math.random()),
-                source: edge.SourceUrl,
-                target: edge.DestinationUrl
+                id: `${edge.SourceId},${edge.DestinationId}`,
+                source: edge.SourceId,
+                target: edge.DestinationId
             }
         };
     }
 
     let nodeMap = {}; // so we can check node existence in constant time
-    function buildNode(url) {
-        nodeMap[url] = true;
-        // TODO: use the database id instead of a huge string for the id
+    function buildNode(id, url, title) {
+        nodeMap[id] = true;
         return {
             group: "nodes",
             data: {
-                id: url,
-                url: url
+                id: id,
+                url: url,
+                title: title
             }
         };
     }
     function buildNodes(edge) {
         let nodes = [];
         // if there is not a node with a particular URL, make it
-        if (!nodeMap[edge.SourceUrl]) {
-            nodes.push(buildNode(edge.SourceUrl));
+        if (!nodeMap[edge.SourceId]) {
+            nodes.push(buildNode(edge.SourceId, edge.SourceUrl, edge.SourceTitle));
         }
-        if (!nodeMap[edge.DestinationUrl]) {
-            nodes.push(buildNode(edge.DestinationUrl));
+        if (!nodeMap[edge.DestinationId]) {
+            nodes.push(buildNode(edge.DestinationId, edge.DestinationUrl, edge.DestinationTitle));
         }
         return nodes;
     }

@@ -31,7 +31,7 @@ window.Hercules.PreviousSearches = class PreviousSearches {
                     SearchType: cookie.searchType,
                     SearchDepth: cookie.searchDepth,
                     RootURL: cookie.rootURL,
-                    keyword: cookie.keyword
+                    Keyword: cookie.keyword
                 }
             });
         });

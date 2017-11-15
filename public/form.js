@@ -21,8 +21,11 @@ window.Hercules.setUpForm = function setUpForm() {
         searchForm.applyErrors(errors);
         if (errors.length == 0) {
             window.Hercules.sendFormData(params).then((json) => {
-                window.Hercules.populateChart(json);
+                if (!json) {
+                    return;
+                }
                 searchForm.updatePreviousSearches();
+                window.Hercules.populateChart(json.Edges);
             });
         }
     };
