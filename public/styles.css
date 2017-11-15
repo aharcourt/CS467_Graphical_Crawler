@@ -18,6 +18,11 @@ form {
   padding-right: 0.5em;
 }
 
+.field > .error {
+  padding-left: 0.5em;
+  color: darkred;
+}
+
 #cyChart {
   width: 800px;
   height: 600px;

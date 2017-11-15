@@ -1,35 +1,36 @@
 /* globals window, document */
 
-// I don't believe it's possible to call these functions before the page is properly
-// loaded, but better safe than sorry. Call a function "toCall" as soon as "when"
-// returns true.
-window.Hercules.eventuallyCall = function eventuallyCall(toCall, when) {
-    if (when()) {
-        toCall();
-    } else {
-        console.warn("Attempted to call a function before dependencies were loaded. Retrying in 50ms, but global dependencies could change in the mean time.");
-        setTimeout(() => eventuallyCall(toCall, when), 50);
-    }
-};
-
 window.Hercules.setUpForm = function setUpForm() {
-    const params = {};
-
-    const handleSubmit = (event) => {
-        event.preventDefault(); // don't submit the normal way
-        window.Hercules.eventuallyCall(
-            () => window.Hercules.sendFormData(params),
-            () => (typeof window.Hercules.sendFormData === "function")
-        );
+    const VALID_URL = /^https?:\/\//;
+    const validateFormData = function validateFormData(data) {
+        let errors = [];
+        if (!data.RootURL || !data.RootURL.match(VALID_URL)) {
+            errors.push({
+                field: "RootURL",
+                message: "*A Url (starting from http...) is required."
+            });
+        }
+        return errors;
     };
 
-    const searchForm = new window.Hercules.SearchForm({
+    const params = {};
+    let searchForm;
+    const handleSubmit = (event) => {
+        event.preventDefault(); // don't submit the normal way
+        let errors = validateFormData(params);
+        searchForm.applyErrors(errors);
+        if (errors.length == 0) {
+            window.Hercules.sendFormData(params);
+        }
+    };
+
+    searchForm = new window.Hercules.SearchForm({
         params: params,
+        previousSearchCookie: new window.Hercules.SearchCookie(document.cookie),
         onSubmit: handleSubmit
     });
+    // for debug
+    window.Hercules.searchForm = searchForm;
 
-    window.Hercules.eventuallyCall(
-        () => document.getElementById("root").appendChild(searchForm.formTag),
-        () => Boolean(document.getElementById("root"))
-    );
+    document.getElementById("root").appendChild(searchForm.formTag);
 };

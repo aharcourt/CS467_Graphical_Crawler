@@ -13,15 +13,40 @@ window.Hercules.SearchForm = class SearchForm {
         this._formData.RootURL = "";
         this._formData.SearchType = "DFS";
         this._formData.SearchDepth = 0;
+        this._formData.Keyword = "";
 
         // Bind class methods so that change handlers think they're called by
         // the class instance and not the inputs they're attached to.
         this._handleUrlChange = this._handleUrlChange.bind(this);
         this._handleSearchTypeChange = this._handleSearchTypeChange.bind(this);
         this._handleSearchDepthChange = this._handleSearchDepthChange.bind(this);
+        this._handleKeywordChange = this._handleKeywordChange.bind(this);
 
         // Do the thing.
         this._createForm();
+    }
+
+    // Add error messages to fields
+    applyErrors(errors) {
+        // remove existing errors
+        let toRemove = document.getElementsByClassName("error");
+        while (toRemove.length) {
+            toRemove[0].parentNode.removeChild(toRemove[0]);
+        }
+        // add error next to relevant field
+        errors.forEach((error) => {
+            switch (error.field) {
+            case "RootURL": {
+                if (!this.url) {
+                    return;
+                }
+                let message = document.createElement("span");
+                message.classList.add("error");
+                message.textContent = error.message;
+                this.url.parentNode.appendChild(message);
+            }
+            }
+        });
     }
 
     // Build a <form> HTML tag with references to all its inputs. Bind appropriate
@@ -105,6 +130,23 @@ window.Hercules.SearchForm = class SearchForm {
         searchDepthField.appendChild(this.searchDepth);
         this.formTag.appendChild(searchDepthField);
 
+        // Keyword text input
+        let keywordField = this._createField();
+        this.keyword = this._createElement("input", {
+            type: "text",
+            name: "keyword",
+            id: "keyword",
+            value: "",
+            onchange: this._handleKeywordChange,
+        });
+        let keywordLabel = this._createElement("label", {
+            for: "keyword",
+            textContent: "Keyword (stops search when encountered)"
+        });
+        keywordField.appendChild(keywordLabel);
+        keywordField.appendChild(this.keyword);
+        this.formTag.appendChild(keywordField);
+
         // Submit button
         this.submit = this._createElement("input", {
             type: "submit",
@@ -150,6 +192,11 @@ window.Hercules.SearchForm = class SearchForm {
         let value = ev.target.valueAsNumber;
         this.update({ SearchDepth: value });
     }
+    _handleKeywordChange(ev) {
+        console.log("keywordChanged");
+        let value = ev.target.value;
+        this.update({ Keyword: value });
+    }
 
     // Validate the state, store it, and update the HTML
     update(newState) {
@@ -179,6 +226,8 @@ window.Hercules.SearchForm = class SearchForm {
         depth = Math.min(depth, this.searchDepth.max);
         depth = Math.floor(depth);
         this._formData.SearchDepth = depth;
+
+        this._formData.Keyword = newState.Keyword;
     }
 
     _updateHTMLState() {
@@ -186,9 +235,6 @@ window.Hercules.SearchForm = class SearchForm {
         this.dfs.checked = (this._formData.SearchType === "DFS");
         this.bfs.checked = (this._formData.SearchType === "BFS");
         this.searchDepth.value = this._formData.SearchDepth;
-
-        this.submit.disabled = (
-            !this._formData.RootURL
-        );
+        this.keyword.value = this._formData.Keyword;
     }
 };
