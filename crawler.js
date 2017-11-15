@@ -2,7 +2,7 @@ let express = require("express");
 let bodyParser = require("body-parser");
 let search = require("./lib/searches");
 let cookieParser = require("cookie-parser");
-let SearchCookie = require("./lib/SearchCookie");
+let SearchCookie = require("./public/SearchCookie");
 let dbAPI = require("./lib/dbApi");
 
 // Create server object

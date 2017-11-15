@@ -1,5 +1,5 @@
 // Define a SearchCookie class to help manage saved searches
-module.exports = class SearchCookie {
+class SearchCookie {
     // raw: [ [cookieId,searchType,searchDepth,rootURL,keyword] ]
     constructor(raw) {
         this.raw = raw;
@@ -52,4 +52,14 @@ module.exports = class SearchCookie {
         });
         return JSON.stringify(values);
     }
-};
+}
+
+/* globals window, module */
+// Expose the SearchCookie class to whoever is trying to consume it.
+if (window && window.Hercules) {
+    // We're on the front-end, save the class to the Hercules namespace.
+    window.Hercules.SearchCookie = SearchCookie;
+} else if (module) {
+    // We're on the server, allow SearchCookie to be required.
+    module.exports = SearchCookie;
+}
