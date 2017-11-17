@@ -3,9 +3,10 @@ window.Hercules.sendFormData = function sendFormData(params) {
     // fetch is a Promise-based function which can be used instead of making
     // XMLHTTPRequest objects with callbacks. It is defined in most recent
     // browsers. Our code will only be tested in Chrome.
-    fetch("/crawl", {
+    return fetch("/crawl", {
         method: "POST",
         headers: new Headers({ "Content-Type": "application/json" }),
+        credentials: "same-origin", // enable cookies
         body: JSON.stringify(params)
     }).then((response) => {
         if (!response.ok) {
@@ -19,7 +20,5 @@ window.Hercules.sendFormData = function sendFormData(params) {
         // In all cases, pretend we got a null response, which is ignored by cytoscape.
         console.error(err);
         return null;
-    }).then((json) => {
-        window.Hercules.populateChart(json);
     });
 };

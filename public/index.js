@@ -30,8 +30,12 @@ window.Hercules.loadScripts = function loadScripts(scripts) {
 };
 
 window.Hercules.loadScripts([
-    "./transformJSON.js",
     "./chart.js",
+    "./form.js",
+    "./PreviousSearches.js",
+    "./SearchCookie.js",
+    "./SearchForm.js",
     "./serverApi.js",
-    "./form.js"
+    "./transformJSON.js",
+    "./run.js"
 ]);
