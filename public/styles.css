@@ -18,6 +18,17 @@ form {
   padding-right: 0.5em;
 }
 
+.field > .error {
+  padding-left: 0.5em;
+  color: darkred;
+}
+
+#separator {
+  display: block;
+  margin-left: 0.5em;
+  margin-bottom: 0.5em;
+}
+
 #cyChart {
   width: 800px;
   height: 600px;

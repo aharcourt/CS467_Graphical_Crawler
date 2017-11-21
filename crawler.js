@@ -2,6 +2,7 @@ let express = require("express");
 let bodyParser = require("body-parser");
 let search = require("./lib/searches");
 let cookieParser = require("cookie-parser");
+let SearchCookie = require("./public/SearchCookie");
 let dbAPI = require("./lib/dbApi");
 
 // Create server object
@@ -22,14 +23,13 @@ app.get("/", function(req, res, next) {
 
 // POST to crawler
 app.post("/crawl", function(req, res, next) {
-    let cookie = req.cookies.cookieID;
     let searchID = new Date().valueOf();
     let keyword = req.body.Keyword || "";
 
     // If no cookie, create one
+    let cookie = req.body.ExistingSearch;
     if (cookie == undefined) {
         cookie = Math.floor(Math.random() * (90000) + 10000);
-        res.cookie("cookieID", cookie);
     }
     console.log("POST /crawl", req.body.RootURL, req.body.SearchType, cookie);
 
@@ -45,14 +45,19 @@ app.post("/crawl", function(req, res, next) {
                 res.send({ Result: result, Edges: [] });
                 return;
             }
-            
+
             let cachedSearch = dbAPI.getExistingTree(cookie, "Ian Dalrymple", req.body.SearchType, req.body.SearchDepth, req.body.RootURL, keyword);
 
             // Get tree from database and return it with metadata
             return cachedSearch.then((edges) => {
-                let response = new Object();
-                response.Result = result;
-                response.Edges = JSON.parse(edges);
+                let newCookie = new SearchCookie(req.cookies.hercules);
+                newCookie.addCookie(cookie, req.body.SearchType, req.body.SearchDepth, req.body.RootURL, keyword);
+                res.cookie("hercules", newCookie.toString());
+
+                let response = {
+                    Result: result,
+                    Edges: JSON.parse(edges)
+                };
                 res.send(response);
             });
         });
