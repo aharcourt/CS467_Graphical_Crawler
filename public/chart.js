@@ -6,8 +6,12 @@ window.Hercules.setUpChart = function setUpChart() {
             {
                 selector: "node",
                 style: {
-                    "background-color": "#555",
                     "label": "data(label)", // call data("label") on the node
+                    "background-color": "data(color)",
+                    "text-wrap": "wrap",
+                    "border-color": "#ccc",
+                    "border-width": 4,
+                    "border-opacity": 0.5,
                 },
             },
             {
@@ -19,7 +23,7 @@ window.Hercules.setUpChart = function setUpChart() {
             },
         ],
         minZoom: 0.2,
-        maxZoom: 5,
+        maxZoom: 4,
         layout: {
             name: "cose",
             animate: false,
@@ -35,7 +39,7 @@ window.Hercules.setUpChart = function setUpChart() {
     cy.on("mouseover", "node", (ev) => {
         let node = ev.target;
         let label = node.data("title") || "[undefined]";
-        label += " - ";
+        label += "\n";
         label += node.data("url") || "[undefined]";
         // The "label" field of the data object is usually empty. Give it a value.
         node.data("label", label);
