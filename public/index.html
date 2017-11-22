@@ -9,6 +9,11 @@
 	<body>
 		<h1>Graphical Crawler Main Page</h1>
 		<div id="root"></div>
+		<div id="legend" class="hidden">
+			<p>Nodes with the same color are pages with the same host.</p>
+			<p>If a keyword was found on a certain page, that page's node is colored yellow.</p>
+			<p><b>Scroll</b> to zoom. <b>Drag</b> to pan. <b>Click</b> nodes to visit the page</p>
+		</div>
 		<div id="cyChart"></div>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.2.3/cytoscape.min.js"></script>
 		<script src="./index.js"></script>

@@ -59,6 +59,9 @@ window.Hercules.setUpChart = function setUpChart() {
         }
         window.open(url);
     });
+
+    // show the "legend" now that the chart is visible
+    document.getElementById("legend").classList.remove("hidden");
 };
 
 window.Hercules.populateChart = function populateChart(json) {

@@ -29,6 +29,17 @@ form {
   margin-bottom: 0.5em;
 }
 
+#legend {
+  text-align: right;
+}
+#legend > p {
+  font-size: 0.9em;
+  margin: 0.5em 0;
+}
+#legend.hidden {
+  display: none;
+}
+
 #cyChart {
   width: 800px;
   height: 600px;
