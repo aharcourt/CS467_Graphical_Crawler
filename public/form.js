@@ -20,12 +20,23 @@ window.Hercules.setUpForm = function setUpForm() {
         let errors = validateFormData(params);
         searchForm.applyErrors(errors);
         if (errors.length == 0) {
+            searchForm.disable();
             window.Hercules.sendFormData(params).then((json) => {
                 if (!json) {
                     return;
                 }
+                if (json.Result.status === -1) {
+                    searchForm.applyErrors([ {
+                        field: "RootURL",
+                        message: "This Url failed to return a valid web page."
+                    } ]);
+                }
                 searchForm.updatePreviousSearches();
-                window.Hercules.populateChart(json.Edges);
+                window.Hercules.populateChart(json);
+            }).then(() => {
+                searchForm.enable();
+            }).catch(() => {
+                searchForm.enable();
             });
         }
     };
