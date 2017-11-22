@@ -15,3 +15,8 @@ window.Hercules.hideLoader = function hideLoader() {
         container.parentNode.removeChild(container);
     }
 };
+
+// Show the loader before requesting all the other code blocks, and then hide it
+// when we're done. This should be the only code which executes functionality
+// before all the code is loaded.
+window.Hercules.showLoader();
