@@ -21,6 +21,7 @@ window.Hercules.PreviousSearches = class PreviousSearches {
             herculesCookie = "";
         }
         let searchCookie = new window.Hercules.SearchCookie(herculesCookie);
+        window.Hercules.cookie = searchCookie;
         this.searches = [ { id: 0, text: "--" } ];
         searchCookie.getCookies().forEach((cookie) => {
             this.searches.push({

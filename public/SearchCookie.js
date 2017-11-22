@@ -33,6 +33,10 @@ class SearchCookie {
     }
 
     addCookie(id, searchType, searchDepth, rootURL, keyword) {
+        if (this._cookies.findIndex((cookie) => cookie.cookieID === id) > -1) {
+            // we don't need to add cookies which already exist
+            return;
+        }
         this._cookies.unshift({ // put the new cookie at the "top" of the list
             cookieID: id,
             searchType: searchType,
