@@ -33,7 +33,7 @@ class SearchCookie {
     }
 
     addCookie(id, searchType, searchDepth, rootURL, keyword) {
-        if (this._cookies.findIndex((cookie) => cookie.cookieID === id) > -1) {
+        if (this.withID(id)) {
             // we don't need to add cookies which already exist
             return;
         }

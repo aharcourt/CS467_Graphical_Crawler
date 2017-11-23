@@ -50,11 +50,13 @@ window.Hercules.transformJSON = function transformJSON(json) {
         }
     });
 
-    // TODO: what about cached (status: 3) results?
-    if (json.Result.status === 2) {
-        // The search detected the keyword, change the color of that node.
-        let keywordNode = graphNodes.find((node) => node.data.url === json.Result.keywordURL);
-        keywordNode.data.color = window.Hercules.KEYWORD_COLOR;
+    if (json.Result.status === 2 || json.Result.status === 3) {
+        let keywordURL = json.Edges[0]["Keyword Url"];
+        if (keywordURL) {
+            // The search detected the keyword, change the color of that node.
+            let keywordNode = graphNodes.find((node) => node.data.url === keywordURL);
+            keywordNode.data.color = window.Hercules.KEYWORD_COLOR;
+        }
     }
 
     // Assume the N/A node is the first node, and same for edge. Remove them.
