@@ -51,6 +51,20 @@ window.Hercules.SearchForm = class SearchForm {
         });
     }
 
+    disable() {
+        if (!this.submit) {
+            return;
+        }
+        this.submit.disabled = true;
+    }
+
+    enable() {
+        if (!this.submit) {
+            return;
+        }
+        this.submit.disabled = false;
+    }
+
     updatePreviousSearches() {
         if (this.prevSearches) {
             this.prevSearches.update();

@@ -30,12 +30,14 @@ window.Hercules.loadScripts = function loadScripts(scripts) {
 };
 
 window.Hercules.loadScripts([
+    "./loader.js", // This actually runs code to place a loader in the corner
     "./chart.js",
+    "./colors.js",
     "./form.js",
     "./PreviousSearches.js",
     "./SearchCookie.js",
     "./SearchForm.js",
     "./serverApi.js",
     "./transformJSON.js",
-    "./run.js"
+    "./run.js" // this will start everything and remove the loader when done.
 ]);
